@@ -88,7 +88,7 @@ func (s *SentryExporter) pushTraceData(_ context.Context, td pdata.Traces) error
 				// If the span is not a root span, we can either associate it with an existing
 				// transaction, or we can temporarily consider it an orphan span.
 				if spanIsTransaction(otelSpan) {
-					log.Println(otelSpan.Status(), otelSpan.TraceID(), "is a transaction")
+					log.Println(otelSpan.Status().Code().String(), otelSpan.TraceID().HexString(), otelSpan.ParentSpanID().HexString(), "is a transaction")
 					transactionMap[sentrySpan.SpanID] = transactionFromSpan(sentrySpan)
 					idMap[sentrySpan.SpanID] = sentrySpan.SpanID
 				} else {
