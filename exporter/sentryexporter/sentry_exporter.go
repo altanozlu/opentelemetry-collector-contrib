@@ -21,6 +21,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -258,7 +259,8 @@ func convertToSentrySpan(span pdata.Span, library pdata.InstrumentationLibrary, 
 		Status:      status,
 	}
 
-	if parentSpanID := span.ParentSpanID(); parentSpanID.IsValid() {
+	if parentSpanID := span.ParentSpanID(); !parentSpanID.IsEmpty() {
+		log.Println(parentSpanID.HexString())
 		sentrySpan.ParentSpanID = parentSpanID.Bytes()
 	}
 
@@ -372,7 +374,7 @@ func statusFromSpanStatus(spanStatus pdata.SpanStatus) (status sentry.SpanStatus
 // If parent span id is empty or the span kind allows remote parent spans, then the span is a root span.
 func spanIsTransaction(s pdata.Span) bool {
 	kind := s.Kind()
-	return s.ParentSpanID() == pdata.SpanID{} || kind == pdata.SpanKindServer || kind == pdata.SpanKindConsumer
+	return s.ParentSpanID().IsEmpty() || kind == pdata.SpanKindServer || kind == pdata.SpanKindConsumer
 }
 
 // transactionFromSpan converts a span to a transaction.
