@@ -258,7 +258,7 @@ func convertToSentrySpan(span pdata.Span, library pdata.InstrumentationLibrary, 
 		Status:      status,
 	}
 
-	if parentSpanID := span.ParentSpanID(); !parentSpanID.IsEmpty() {
+	if parentSpanID := span.ParentSpanID(); parentSpanID.IsValid() {
 		sentrySpan.ParentSpanID = parentSpanID.Bytes()
 	}
 
