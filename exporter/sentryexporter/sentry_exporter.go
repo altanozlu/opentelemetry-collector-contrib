@@ -184,7 +184,7 @@ func sentryEventFromError(errorMessage, errorType string, span *sentry.Span) (*s
 
 	event.Type = errorType
 	event.Message = errorMessage
-	event.Level = "warning"
+	event.Level = "info"
 	// event.Exception = []sentry.Exception{{
 	// 	Value: errorMessage,
 	// 	Type:  errorType,
